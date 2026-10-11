@@ -1,0 +1,8 @@
+---
+// Applique la typographie française au texte qu'on lui confie
+// (ici, le texte de l'histoire écrit en Markdown).
+import { espacesHtml } from '../lib/typo.mjs';
+
+const html = await Astro.slots.render('default');
+---
+<Fragment set:html={espacesHtml(html)} />

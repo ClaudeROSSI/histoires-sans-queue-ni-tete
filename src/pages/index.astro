@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import SansQueueNiTete from '../components/SansQueueNiTete.astro';
+import Illustration from '../components/Illustration.astro';
+import { lireHistoires } from '../lib/histoires';
+import { lien } from '../lib/liens';
+import { espaces } from '../lib/typo.mjs';
+
+const histoires = await lireHistoires();
+---
+<Base>
+  <header class="entete">
+    <h1 class="grand-titre"><span>Histoires sans queue ni tête</span></h1>
+    <SansQueueNiTete />
+    <p class="chapeau">Des histoires inventées à la maison. Chacune commence par un dessin.</p>
+  </header>
+
+  <section aria-labelledby="sommaire">
+    <h2 id="sommaire" class="intertitre">Le recueil</h2>
+    <ol class="recueil">
+      {
+        histoires.map((h) => (
+          <li class="feuille histoire">
+            {h.data.couverture && (
+              <div class="histoire-image">
+                <Illustration
+                  image={h.data.couverture}
+                  alt={h.data.couvertureAlt}
+                  sizes="(min-width: 48rem) 18rem, 80vw"
+                  prioritaire={h.numero === 1}
+                />
+              </div>
+            )}
+            <p class="numero">n° {h.numero}</p>
+            <h3 class="histoire-titre">
+              <a href={lien(`/histoires/${h.slug}/`)}>{espaces(h.data.titre)}</a>
+            </h3>
+            {h.data.resume && <p class="histoire-resume">{espaces(h.data.resume)}</p>}
+            {h.data.dessin && <p class="histoire-auteur">D'après un dessin de {h.data.dessin}</p>}
+          </li>
+        ))
+      }
+      <li class="feuille feuille-vide">
+        <p>La prochaine histoire est en train de s'écrire.</p>
+      </li>
+    </ol>
+  </section>
+</Base>

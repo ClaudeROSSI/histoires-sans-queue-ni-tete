@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import SansQueueNiTete from '../components/SansQueueNiTete.astro';
+import { lien } from '../lib/liens';
+---
+<Base titre="Page introuvable">
+  <header class="entete">
+    <h1 class="grand-titre"><span>Cette page n'a ni queue ni tête</span></h1>
+    <SansQueueNiTete />
+    <p class="chapeau">
+      Elle n'existe pas, ou elle a changé d'adresse.{' '}
+      <a href={lien('/')}>Retourner au recueil</a>
+    </p>
+  </header>
+</Base>

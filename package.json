@@ -1,0 +1,20 @@
+{
+  "name": "histoires-sans-queue-ni-tete",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Un recueil d'histoires inventées à la maison, à partir de dessins.",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "nouvelle": "node scripts/nouvelle-histoire.mjs",
+    "photos": "node scripts/preparer-photos.mjs"
+  },
+  "dependencies": {
+    "@fontsource/andika": "^5.3.0",
+    "@fontsource/caveat-brush": "^5.3.0",
+    "astro": "^7.3.8",
+    "sharp": "^0.35.5"
+  }
+}

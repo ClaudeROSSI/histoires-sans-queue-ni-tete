@@ -1,0 +1,471 @@
+/* Histoires sans queue ni tête
+   Un cahier d'écolier (réglure Seyès), des feuilles volantes pliées en quatre,
+   un stylo quatre couleurs et un feutre jaune. */
+
+:root {
+  color-scheme: light;
+
+  --papier: #ffffff;
+  --cahier: #fcfcfe;
+  --encre: #1d2f8f;
+  --encre-texte: #16215f;
+  --ligne: #e3e8f8;
+  --ligne-forte: #c6cff0;
+  --lavis: #e6eafa;
+  --rouge: #d8352a;
+  --vert: #1e8a4c;
+  --feutre: #f4c20d;
+  --feutre-clair: #ffe98a;
+
+  --main: 'Caveat Brush', 'Comic Sans MS', cursive;
+  --lecture: 'Andika', 'Trebuchet MS', Verdana, sans-serif;
+
+  --carreau: 2rem; /* un grand carreau du cahier */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--encre-texte);
+  font-family: var(--lecture);
+  font-size: 1.125rem;
+  line-height: 1.75;
+  background-color: var(--cahier);
+  background-image:
+    linear-gradient(var(--ligne-forte) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ligne-forte) 1px, transparent 1px),
+    linear-gradient(var(--ligne) 1px, transparent 1px);
+  background-size:
+    100% var(--carreau),
+    var(--carreau) 100%,
+    100% calc(var(--carreau) / 4);
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--encre);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  text-decoration-color: var(--feutre);
+  text-decoration-thickness: 4px;
+}
+
+:focus-visible {
+  outline: 3px solid var(--rouge);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.evitement {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 10;
+  padding: 0.4rem 0.9rem;
+  background: var(--feutre);
+  color: var(--encre-texte);
+}
+
+.evitement:focus {
+  top: 1rem;
+}
+
+.hors-ecran {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --- Le cahier : colonne centrale et marge rouge ------------------------- */
+
+.cahier {
+  position: relative;
+  max-width: 68rem;
+  margin-inline: auto;
+  padding: var(--carreau) clamp(1.25rem, 5vw, 4rem) calc(var(--carreau) * 2) clamp(2rem, 7vw, 6rem);
+}
+
+.cahier::before {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  left: clamp(0.9rem, 3.5vw, 3rem);
+  width: 2px;
+  background: var(--rouge);
+  opacity: 0.55;
+}
+
+/* --- En-têtes -------------------------------------------------------------- */
+
+.entete {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--carreau);
+  align-items: center;
+  padding-block: calc(var(--carreau) * 1.5) calc(var(--carreau) * 2);
+}
+
+.grand-titre {
+  margin: 0;
+  max-width: 11em;
+  font-family: var(--main);
+  font-weight: 400;
+  font-size: clamp(3rem, 2rem + 6.4vw, 6.75rem);
+  line-height: 1.06;
+  letter-spacing: -0.01em;
+  color: var(--encre);
+  transform: rotate(-2deg);
+  transform-origin: left center;
+  text-wrap: balance;
+}
+
+/* Le titre entier est passé au feutre jaune, ligne après ligne. */
+.grand-titre span {
+  padding-inline: 0.12em;
+  background: linear-gradient(transparent 56%, var(--feutre) 56%, var(--feutre) 90%, transparent 90%);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.embleme {
+  width: min(100%, 22rem);
+  justify-self: center;
+}
+
+.chapeau {
+  margin: 0;
+  max-width: 34rem;
+  font-size: 1.25rem;
+  line-height: 1.6;
+}
+
+.entete .chapeau {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 48rem) {
+  .entete {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  }
+}
+
+.entete-histoire {
+  padding-block: var(--carreau) calc(var(--carreau) * 1.5);
+}
+
+.entete-histoire .grand-titre {
+  max-width: 13em;
+  font-size: clamp(2.6rem, 1.8rem + 4.6vw, 5.25rem);
+  margin-block: 0.15em 0.45em;
+}
+
+.retour {
+  margin: 0 0 var(--carreau);
+}
+
+.numero {
+  margin: 0;
+  font-family: var(--main);
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--rouge);
+}
+
+.intertitre {
+  margin: calc(var(--carreau) * 2) 0 var(--carreau);
+  font-family: var(--main);
+  font-weight: 400;
+  font-size: clamp(2rem, 1.6rem + 1.6vw, 2.75rem);
+  line-height: 1.15;
+  color: var(--encre);
+}
+
+/* --- Les feuilles volantes -------------------------------------------------- */
+
+.feuille {
+  position: relative;
+  background-color: var(--papier);
+  /* les plis de la feuille pliée en quatre */
+  background-image:
+    linear-gradient(90deg, transparent calc(50% - 1px), rgb(29 47 143 / 0.09) 50%, transparent calc(50% + 1px)),
+    linear-gradient(transparent calc(50% - 1px), rgb(29 47 143 / 0.07) 50%, transparent calc(50% + 1px));
+  border: 1px solid var(--ligne-forte);
+  box-shadow: 0.5rem 0.5rem 0 rgb(29 47 143 / 0.1);
+}
+
+.recueil {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: calc(var(--carreau) * 1.5) var(--carreau);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.histoire {
+  padding: 1rem 1.25rem 1.5rem;
+  transform: rotate(-1.2deg);
+  transition: transform 0.18s ease-out;
+}
+
+.histoire:nth-child(even) {
+  transform: rotate(1deg);
+}
+
+.histoire:hover,
+.histoire:focus-within {
+  transform: rotate(0deg) translateY(-0.25rem);
+}
+
+.histoire-image {
+  margin: 0 0 1rem;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid var(--ligne);
+}
+
+.histoire-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 38%;
+}
+
+.histoire-titre {
+  margin: 0 0 0.35rem;
+  font-family: var(--main);
+  font-weight: 400;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.histoire-titre a {
+  text-decoration: none;
+}
+
+/* toute la feuille est cliquable */
+.histoire-titre a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.histoire-resume,
+.histoire-auteur {
+  margin: 0.35rem 0 0;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.histoire-auteur {
+  color: var(--encre);
+}
+
+.feuille-vide {
+  display: grid;
+  place-items: center;
+  min-height: 14rem;
+  padding: 1.5rem;
+  background: none;
+  border: 2px dashed var(--ligne-forte);
+  box-shadow: none;
+  text-align: center;
+}
+
+.feuille-vide p {
+  margin: 0;
+  max-width: 12em;
+  font-family: var(--main);
+  font-size: 1.6rem;
+  line-height: 1.2;
+  color: var(--encre);
+}
+
+/* --- La planche de bande dessinée ------------------------------------------ */
+
+.planche {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: calc(var(--carreau) * 1.25) var(--carreau);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 48rem) {
+  .planche {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.case {
+  margin: 0;
+}
+
+.case-image {
+  position: relative;
+  background: var(--papier);
+  border: 3px solid var(--encre);
+  border-radius: 3px;
+}
+
+.case-image img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
+
+.case-numero {
+  position: absolute;
+  top: -0.9rem;
+  left: -0.9rem;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-family: var(--main);
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--papier);
+  background: var(--rouge);
+  border-radius: 50%;
+}
+
+/* le cartouche, comme un bout de papier jaune collé sous la case */
+.case figcaption {
+  position: relative;
+  width: fit-content;
+  max-width: 94%;
+  margin: -0.9rem 0 0 auto;
+  padding: 0.55rem 0.9rem 0.6rem;
+  font-family: var(--main);
+  font-size: 1.4rem;
+  line-height: 1.22;
+  color: var(--encre-texte);
+  background: var(--feutre-clair);
+  border: 2px solid var(--encre);
+  transform: rotate(-0.8deg);
+}
+
+.planche li:nth-child(even) figcaption {
+  margin-inline: 0 auto;
+  transform: rotate(0.7deg);
+}
+
+/* --- Le texte ----------------------------------------------------------------- */
+
+.prose {
+  max-width: 40rem;
+  padding: clamp(1.25rem, 4vw, 2.75rem);
+}
+
+.prose > :first-child {
+  margin-top: 0;
+}
+
+.prose > :last-child {
+  margin-bottom: 0;
+}
+
+.prose p {
+  margin: 0 0 1.1em;
+}
+
+/* --- Les feuilles d'origine ----------------------------------------------- */
+
+.origines {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  gap: calc(var(--carreau) * 1.25) var(--carreau);
+  align-items: start;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.origine {
+  display: block;
+  border: 1px solid var(--ligne-forte);
+  box-shadow: 0.5rem 0.5rem 0 rgb(29 47 143 / 0.1);
+  transform: rotate(-1.4deg);
+}
+
+.origines li:nth-child(even) .origine {
+  transform: rotate(1.1deg);
+}
+
+.origine img {
+  width: 100%;
+}
+
+/* --- D'une histoire à l'autre, pied de page ------------------------------ */
+
+.suite {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--carreau);
+  margin-top: calc(var(--carreau) * 2.5);
+  padding-top: var(--carreau);
+  border-top: 2px solid var(--encre);
+}
+
+.suite a {
+  font-family: var(--main);
+  font-size: 1.75rem;
+  line-height: 1.15;
+}
+
+.suite span {
+  display: block;
+  font-family: var(--lecture);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--encre-texte);
+}
+
+.suite-droite {
+  margin-left: auto;
+  text-align: right;
+}
+
+.pied {
+  margin-top: calc(var(--carreau) * 3);
+  font-size: 1rem;
+}
+
+.pied p {
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .histoire {
+    transition: none;
+  }
+}

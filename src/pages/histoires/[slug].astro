@@ -1,0 +1,116 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Illustration from '../../components/Illustration.astro';
+import Typo from '../../components/Typo.astro';
+import { lireHistoires, type Histoire } from '../../lib/histoires';
+import { lien } from '../../lib/liens';
+import { espaces } from '../../lib/typo.mjs';
+
+export async function getStaticPaths() {
+  const histoires = await lireHistoires();
+  return histoires.map((histoire, i) => ({
+    params: { slug: histoire.slug },
+    props: { histoire, precedente: histoires[i - 1], suivante: histoires[i + 1] },
+  }));
+}
+
+interface Props {
+  histoire: Histoire;
+  precedente?: Histoire;
+  suivante?: Histoire;
+}
+const { histoire, precedente, suivante } = Astro.props;
+const { data } = histoire;
+const { Content } = await render(histoire);
+const origines = [
+  ...(data.couverture ? [{ image: data.couverture, alt: data.couvertureAlt }] : []),
+  ...data.manuscrit,
+];
+---
+<Base titre={data.titre} description={data.resume} image={data.couverture?.src}>
+  <article>
+    <header class="entete-histoire">
+      <p class="retour"><a href={lien('/')}>Toutes les histoires</a></p>
+      <p class="numero">Histoire n° {histoire.numero}</p>
+      <h1 class="grand-titre"><span>{espaces(data.titre)}</span></h1>
+      {
+        (data.dessin || data.texte) && (
+          <p class="chapeau">
+            {data.dessin && <>D'après un dessin de {data.dessin}. </>}
+            {data.texte && <>Texte de {data.texte}.</>}
+          </p>
+        )
+      }
+    </header>
+
+    {
+      data.cases.length > 0 && (
+        <section aria-labelledby="planche">
+          <h2 id="planche" class="hors-ecran">La bande dessinée</h2>
+          <ol class="planche">
+            {data.cases.map((c, i) => (
+              <li>
+                <figure class="case">
+                  <div class="case-image">
+                    <Illustration image={c.image} alt={c.alt} prioritaire={i < 2} />
+                    <span class="case-numero" aria-hidden="true">{i + 1}</span>
+                  </div>
+                  <figcaption>{espaces(c.legende)}</figcaption>
+                </figure>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )
+    }
+
+    <section class="texte" aria-labelledby="texte">
+      <h2 id="texte" class="intertitre">Le texte en entier</h2>
+      <div class="feuille prose">
+        <Typo><Content /></Typo>
+      </div>
+    </section>
+
+    {
+      origines.length > 0 && (
+        <section aria-labelledby="origines">
+          <h2 id="origines" class="intertitre">Les feuilles d'origine</h2>
+          <ul class="origines">
+            {origines.map((o) => (
+              <li>
+                <a href={o.image.src} class="origine">
+                  <Illustration image={o.image} alt={o.alt} sizes="(min-width: 48rem) 19rem, 80vw" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <nav class="suite" aria-label="D'une histoire à l'autre">
+      {
+        precedente && (
+          <a href={lien(`/histoires/${precedente.slug}/`)} rel="prev">
+            <span>Histoire précédente</span>
+            {precedente.data.titre}
+          </a>
+        )
+      }
+      {
+        suivante ? (
+          <a href={lien(`/histoires/${suivante.slug}/`)} rel="next" class="suite-droite">
+            <span>Histoire suivante</span>
+            {suivante.data.titre}
+          </a>
+        ) : (
+          <a href={lien('/')} class="suite-droite">
+            <span>C'est la dernière pour l'instant</span>
+            Retour au recueil
+          </a>
+        )
+      }
+    </nav>
+  </article>
+</Base>

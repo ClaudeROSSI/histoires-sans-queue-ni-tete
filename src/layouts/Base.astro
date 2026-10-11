@@ -1,0 +1,55 @@
+---
+import '@fontsource/andika/latin-400.css';
+import '@fontsource/andika/latin-700.css';
+import '@fontsource/andika/latin-ext-400.css';
+import '@fontsource/caveat-brush/latin-400.css';
+import '@fontsource/caveat-brush/latin-ext-400.css';
+import '../styles/global.css';
+import { lien } from '../lib/liens';
+
+interface Props {
+  titre?: string;
+  description?: string;
+  image?: string;
+}
+const recueil = 'Histoires sans queue ni tête';
+const {
+  titre,
+  description = "Un recueil d'histoires inventées à la maison, à partir d'un dessin.",
+  image,
+} = Astro.props;
+const titrePage = titre ? `${titre} | ${recueil}` : recueil;
+const adresse = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titrePage}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={adresse} />
+    <link rel="icon" type="image/svg+xml" href={lien('/favicon.svg')} />
+    <meta property="og:title" content={titrePage} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={adresse} />
+    <meta property="og:locale" content="fr_FR" />
+    {image && <meta property="og:image" content={new URL(image, Astro.site)} />}
+    <meta name="theme-color" content="#1D2F8F" />
+  </head>
+  <body>
+    <a class="evitement" href="#contenu">Aller au contenu</a>
+    <div class="cahier">
+      <main id="contenu">
+        <slot />
+      </main>
+      <footer class="pied">
+        <p>
+          Fait à la maison, avec un stylo bleu et un feutre jaune.{' '}
+          <a href="https://github.com/ClaudeROSSI/histoires-sans-queue-ni-tete">Le code du site est sur GitHub.</a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
